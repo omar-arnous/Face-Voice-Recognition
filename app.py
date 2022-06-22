@@ -14,4 +14,5 @@ def facerecognition():
 def voicerecognition():
     return jsonify({'message': 'omar voice verified'})    
 
-app.run()    
+if __name__ == '__main__':
+    app.run()    
