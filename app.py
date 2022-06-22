@@ -1,6 +1,10 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 
 app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return jsonify({'message': 'Welcome to the AI System'})
 
 @app.route('/face')
 def facerecognition():
@@ -10,4 +14,4 @@ def facerecognition():
 def voicerecognition():
     return jsonify({'message': 'omar voice verified'})    
 
-app.run(port=3000)    
+app.run()    
