@@ -10,4 +10,4 @@ def facerecognition():
 def voicerecognition():
     return jsonify({'message': 'omar voice verified'})    
 
-app.run(port=5000)    
+app.run()    
