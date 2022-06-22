@@ -1,16 +1,12 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-@app.route('/')
-def home():
-    return jsonify({'message': 'Welcome to the AI System'})
-
-@app.route('/face')
+@app.route('/face', methods=['POST'])
 def facerecognition():
     return jsonify({'message': 'omar face verified'})
 
-@app.route('/voice')
+@app.route('/voice', methods=['POST'])
 def voicerecognition():
     return jsonify({'message': 'omar voice verified'})    
 
