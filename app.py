@@ -11,3 +11,5 @@ def facerecognition():
 @app.route('/voice')
 def voicerecognition():
     return jsonify({message: 'omar voice verified'})    
+
+app.run(port=8000)    
