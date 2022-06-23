@@ -1,2 +1,8 @@
 FLask
 uwsgi
+cmake
+dlib
+face_recognition
+sklearn
+python_speech_features
+scipy
