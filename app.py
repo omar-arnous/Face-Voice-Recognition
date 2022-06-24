@@ -14,7 +14,6 @@ def facerecognition():
     response = request.get_data()
     picture_1 = request.files['picture_1']
     picture_2 = request.files['picture_2']
-    name = response['name']
     # print(picture_1)
     # print(picture_2)
     pic_1 = werkzeug.utils.secure_filename(picture_1.filename)
