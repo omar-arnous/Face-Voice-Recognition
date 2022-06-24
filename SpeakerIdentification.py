@@ -1,5 +1,4 @@
 import os
-import time
 import pickle
 import warnings
 import numpy as np
@@ -8,29 +7,29 @@ from scipy.io.wavfile import read
 import python_speech_features as mfcc
 from sklearn.mixture import GaussianMixture
 from pydub import AudioSegment
+import pyaudio
 import os
 import wave
-import ffmpeg
 
-import sys
-sys.path.append('C:\\ffmpeg\\bin')
-
+# import sys
+# sys.path.append('C:\\ffmpeg\\bin')
 
 warnings.filterwarnings("ignore")
 
 class VoiceRecognition():
     def __init__(self, audio, name):
-        # AudioSegment.from_file(audio, format='m4a')
-        audio_file = ffmpeg.input(audio)
+        audio_file = AudioSegment.from_file(audio, format='m4a')
         self.audio = audio_file.export("audio", format='wav')
         self.name = name
 
     def register_audio(self):
+        audio = pyaudio.PyAudio()
         Recordframes = []
         start = 0
         end = 7000
         for count in range(5):
-            Recordframes.append(self.audio[start:end])
+            # sample = self.audio[start:end]
+            Recordframes.append(self.audio)
             OUTPUT_FILENAME =  self.name + "-sample" + str(count) + ".wav"
             WAVE_OUTPUT_FILENAME = os.path.join("voice recognition\\training_set", OUTPUT_FILENAME)
             trainedfilelist = open("voice recognition\\training_set_addition.txt", 'a')
@@ -80,9 +79,9 @@ class VoiceRecognition():
 
 
     def train_model(self):
-        source = "\\voice recognition\\training_set\\"
-        dest = "\\voice recognition\\trained_models\\"
-        train_file = "\\voice recognition\\training_set_addition.txt"
+        source = "voice recognition\\training_set\\"
+        dest = "voice recognition\\trained_models\\"
+        train_file = "voice recognition\\training_set_addition.txt"
         file_paths = open(train_file, 'r')
         count = 1
         features = np.asarray(())
@@ -114,9 +113,9 @@ class VoiceRecognition():
 
 
     def test_model(self):
-        source = ".\\voice recognition\\testing_set\\"
-        modelpath = "\\voice recognition\\trained_models\\"
-        test_file = "\\voice recognition\\testing_set_addition.txt"
+        source = "voice recognition\\testing_set\\"
+        modelpath = "voice recognition\\trained_models\\"
+        test_file = "voice recognition\\testing_set_addition.txt"
         file_paths = open(test_file, 'r')
 
         gmm_files = [os.path.join(modelpath, fname) for fname in
@@ -145,14 +144,3 @@ class VoiceRecognition():
             winner = np.argmax(log_likelihood)
             print("\t detected as - ", speakers[winner])
             return speakers[winner]
-            time.sleep(1.0)
-
-    # while True:
-    #     choice = int(
-    #         input("\n 1.Train Model \n 2.Test Model \n"))
-    #     if choice == 1:
-    #         train_model()
-    #     elif choice == 2:
-    #         test_model()
-    #     elif choice > 2:
-    #         exit()

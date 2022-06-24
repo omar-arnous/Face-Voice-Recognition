@@ -8,4 +8,4 @@ python_speech_features
 scipy
 pydub
 wave
-ffmpeg-python
+pyaudio
