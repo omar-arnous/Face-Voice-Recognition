@@ -17,23 +17,25 @@ warnings.filterwarnings("ignore")
 
 class VoiceRecognition():
     def __init__(self, audio, name):
-        # file = audio
-        # new_audio = os.path.splittext(file)[0]
-        # os.rename(file, new_audio + ".wav")
-        self.audio = audio
+        file = audio
+        new_audio = os.path.splittext(file)[0]
+        self.audio = os.rename(file, new_audio + ".wav")
         self.name = name
 
     def register_audio(self):
-        OUTPUT_FILENAME = self.audio + "-sample" + "1.wav"
-        WAVE_OUTPUT_FILENAME = os.path.join("training_set", OUTPUT_FILENAME)
-        trainedfilelist = open("training_set_addition.txt", 'a')
-        trainedfilelist.write(OUTPUT_FILENAME + "\n")
-        waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-        waveFile.setnchannels(1)
-        waveFile.setsampwidth(audio.get_sample_size(pyaudio.paInt16))
-        waveFile.setframerate(44100)
-        waveFile.writeframes(b''.join(self.audio))
-        waveFile.close()
+        Recordframes = []
+        for count in range(5):
+            
+            OUTPUT_FILENAME = self.audio + "-sample" + str(count) + ".wav"
+            WAVE_OUTPUT_FILENAME = os.path.join("voice recognition\\training_set", OUTPUT_FILENAME)
+            trainedfilelist = open("voice recognition\\training_set_addition.txt", 'a')
+            trainedfilelist.write(OUTPUT_FILENAME + "\n")
+            waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+            waveFile.setnchannels(1)
+            waveFile.setsampwidth(audio.get_sample_size(pyaudio.paInt16))
+            waveFile.setframerate(44100)
+            waveFile.writeframes(b''.join(self.audio))
+            waveFile.close()
 
         source = "voice recognition\\training_set\\"
         dest = "voice recognition\\trained_models\\"
@@ -166,6 +168,7 @@ class VoiceRecognition():
 
             winner = np.argmax(log_likelihood)
             print("\t detected as - ", speakers[winner])
+            return speakers[winner]
             time.sleep(1.0)
 
     # while True:
