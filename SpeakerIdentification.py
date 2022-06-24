@@ -11,6 +11,7 @@ from pydub import AudioSegment
 import os
 import wave
 
+
 import sys
 sys.path.append('C:\\ffmpeg\\bin')
 
@@ -19,7 +20,8 @@ warnings.filterwarnings("ignore")
 
 class VoiceRecognition():
     def __init__(self, audio, name):
-        audio_file = AudioSegment.from_file(audio, format='m4a')
+        # AudioSegment.from_file(audio, format='m4a')
+        audio_file = ffprobe.from_file(audio, format='m4a')
         self.audio = audio_file.export("audio", format='wav')
         self.name = name
 

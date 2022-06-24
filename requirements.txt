@@ -9,4 +9,3 @@ scipy
 pydub
 wave
 ffprobe
-ffmpeg
