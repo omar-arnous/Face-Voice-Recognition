@@ -17,9 +17,10 @@ warnings.filterwarnings("ignore")
 
 class VoiceRecognition():
     def __init__(self, audio, name):
-        file = audio
-        new_audio = os.path.splitext(file)[0]
-        self.audio = os.rename(file, new_audio + ".wav")
+        # file = audio
+        # new_audio = os.path.splittext(file)[0]
+        # os.rename(file, new_audio + ".wav")
+        self.audio = audio
         self.name = name
 
     def register_audio(self):
