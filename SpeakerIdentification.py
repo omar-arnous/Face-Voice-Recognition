@@ -10,8 +10,9 @@ from sklearn.mixture import GaussianMixture
 from pydub import AudioSegment
 import os
 import wave
+
 import sys
-sys.path.append('C:\\Users\\omar9\\Downloads\\Compressed\\ffmpeg-20200831-4a11a6f-win64-static\\ffmpeg-20200831-4a11a6f-win64-static\\bin\\ffmpeg')
+sys.path.append('C:\\ffmpeg\\bin')
 
 
 warnings.filterwarnings("ignore")
