@@ -10,7 +10,7 @@ from sklearn.mixture import GaussianMixture
 from pydub import AudioSegment
 import os
 import wave
-from ffprobe import FFProbe
+import ffmpeg
 
 import sys
 sys.path.append('C:\\ffmpeg\\bin')
@@ -21,7 +21,7 @@ warnings.filterwarnings("ignore")
 class VoiceRecognition():
     def __init__(self, audio, name):
         # AudioSegment.from_file(audio, format='m4a')
-        audio_file = FFProbe.from_file(audio, format='m4a')
+        audio_file = ffmpeg.input(audio)
         self.audio = audio_file.export("audio", format='wav')
         self.name = name
 
