@@ -10,7 +10,7 @@ from sklearn.mixture import GaussianMixture
 from pydub import AudioSegment
 import os
 import wave
-
+import ffprobe
 
 import sys
 sys.path.append('C:\\ffmpeg\\bin')
