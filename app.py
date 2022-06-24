@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 from face_recognition_system import FaceRecognition
 from SpeakerIdentification import VoiceRecognition
 from pydub import AudioSegment
+import sys
+sys.path.append('/path/to/ffmpeg')
 
 app = Flask(__name__)
 
