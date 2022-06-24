@@ -10,24 +10,61 @@ from sklearn.mixture import GaussianMixture
 from pydub import AudioSegment
 from pydub.utils import make_chunks
 import os
+import wave
 
 
 warnings.filterwarnings("ignore")
 
 class VoiceRecognition():
     def __init__(self, audio, name):
-        self.audio = audio
+        file = audio
+        new_audio = os.path.splitext(file)[0]
+        self.audio = os.rename(file, new_audio + ".wav")
         self.name = name
 
     def register_audio(self):
-        myaudio = AudioSegment.from_file(self.audio, "wav")
-        chunk_length_ms = 10000
-        chunks = make_chunks(myaudio, chunk_length_ms)
-        for i, chunk in enumerate(chunks):
-            OUTPUT_FILENAME = self.name + "-sample" + "_{0}.wav" + ".wav".format(i)
-            WAVE_OUTPUT_FILENAME = os.path.join("voice recognition\\training_set", OUTPUT_FILENAME)
-            trainedfilelist = open("voice recognition\\training_set_addition.txt", 'a')
-            trainedfilelist.write(OUTPUT_FILENAME + "\n")
+        OUTPUT_FILENAME = self.audio + "-sample" + "1.wav"
+        WAVE_OUTPUT_FILENAME = os.path.join("training_set", OUTPUT_FILENAME)
+        trainedfilelist = open("training_set_addition.txt", 'a')
+        trainedfilelist.write(OUTPUT_FILENAME + "\n")
+        waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+        waveFile.setnchannels(1)
+        waveFile.setsampwidth(audio.get_sample_size(pyaudio.paInt16))
+        waveFile.setframerate(44100)
+        waveFile.writeframes(b''.join(self.audio))
+        waveFile.close()
+
+        source = "voice recognition\\training_set\\"
+        dest = "voice recognition\\trained_models\\"
+        train_file = "voice recognition\\training_set_addition.txt"
+        file_paths = open(train_file, 'r')
+        count = 1
+        features = np.asarray(())
+        for path in file_paths:
+            path = path.strip()
+            print(path)
+
+            sr, audio = read(source + path)
+            print(sr)
+            vector = self.extract_features(audio, sr)
+
+            if features.size == 0:
+                features = vector
+            else:
+                features = np.vstack((features, vector))
+
+            if count == 5:
+                gmm = GaussianMixture(n_components=6, max_iter=200, covariance_type='diag', n_init=3)
+                gmm.fit(features)
+
+                # dumping the trained gaussian model
+                picklefile = path.split("-")[0] + ".gmm"
+                pickle.dump(gmm, open(dest + picklefile, 'wb'))
+                print('+ modeling completed for speaker:', picklefile, " with data point = ", features.shape)
+                features = np.asarray(())
+                count = 0
+            count = count + 1
+
 
 
     def calculate_delta(self, array):
@@ -94,6 +131,7 @@ class VoiceRecognition():
                 features = np.asarray(())
                 count = 0
             count = count + 1
+        return 1
 
 
     def test_model(self):
