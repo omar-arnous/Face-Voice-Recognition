@@ -19,7 +19,8 @@ def facerecognition():
     # pic_2 = werkzeug.utils.secure_filename(picture_2.filename)
     # picture_1.save("images" + pic_1)
     # picture_1.save("images" + pic_2)
-    result = FaceRecognition(picture_1, picture_2) 
+    face_recognition = FaceRecognition(picture_1, picture_2)
+    result = face_recognition.run() 
     if result:
         return jsonify({'result': 1})
     else:

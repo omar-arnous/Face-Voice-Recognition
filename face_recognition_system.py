@@ -4,6 +4,8 @@ class FaceRecognition:
     def __init__(self, pic1, pic2):
         self.image_1 = pic1
         self.image_2 = pic2
+
+    def run(self):    
         # Load the known images
         image_of_person = face_recognition.load_image_file(self.image_1)
 
