@@ -8,9 +8,10 @@ from scipy.io.wavfile import read
 import python_speech_features as mfcc
 from sklearn.mixture import GaussianMixture
 from pydub import AudioSegment
-from pydub.utils import make_chunks
 import os
 import wave
+import sys
+sys.path.append('C:\\Users\\omar9\\Downloads\\Compressed\\ffmpeg-20200831-4a11a6f-win64-static\\ffmpeg-20200831-4a11a6f-win64-static\\bin\\ffmpeg')
 
 
 warnings.filterwarnings("ignore")
