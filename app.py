@@ -18,11 +18,10 @@ def facerecognition():
 
 @app.route('/register', methods=['POST'])
 def trainmodel():
-    # response = request.get_json()
     audio = request.files['audio']
-    # name = response['name']
-    # AudioSegment.from_file(audio).export(audio, format="wav")
-    return jsonify({"audio": audio})
+    name = request.data['name']
+    AudioSegment.from_file(audio).export(audio, format="wav")
+    return jsonify({"name": name})
     # voice_recognition = VoiceRecognition(audio, name)
 
 @app.route('/voice', methods=['POST'])
