@@ -1,30 +1,29 @@
 from flask import Flask, jsonify, request
-import werkzeug
 from face_recognition_system import FaceRecognition
 from SpeakerIdentification import VoiceRecognition
-from PIL import Image
-from io import BytesIO
-import base64
+from pydub import AudioSegment
 
 app = Flask(__name__)
 
 @app.route('/face', methods=['POST'])
 def facerecognition():
-    jsonify({"message": "face recognition started"})
     picture_1 = request.files['picture_1']
     picture_2 = request.files['picture_2']
-    # print(picture_1)
-    # print(picture_2)
-    # pic_1 = werkzeug.utils.secure_filename(picture_1.filename)
-    # pic_2 = werkzeug.utils.secure_filename(picture_2.filename)
-    # picture_1.save("images" + pic_1)
-    # picture_1.save("images" + pic_2)
     face_recognition = FaceRecognition(picture_1, picture_2)
     result = face_recognition.run() 
     if result:
         return jsonify({'result': 1})
     else:
         return jsonify({'result': 0})
+
+@app.route('/register', methods=['POST'])
+def trainmodel():
+    response = request.get_json()
+    audio = request.files['audio']
+    name = response['name']
+    AudioSegment.from_file(audio).export(audio, format="wav")
+    return jsonify({"audio": audio, "name": name})
+    # voice_recognition = VoiceRecognition(audio, name)
 
 @app.route('/voice', methods=['POST'])
 def voicerecognition():

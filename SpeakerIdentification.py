@@ -7,14 +7,30 @@ from sklearn import preprocessing
 from scipy.io.wavfile import read
 import python_speech_features as mfcc
 from sklearn.mixture import GaussianMixture
+from pydub import AudioSegment
+from pydub.utils import make_chunks
+import os
+
 
 warnings.filterwarnings("ignore")
 
 class VoiceRecognition():
-    def __init__(self):
-        pass
+    def __init__(self, audio, name):
+        self.audio = audio
+        self.name = name
 
-    def calculate_delta(array):
+    def register_audio(self):
+        myaudio = AudioSegment.from_file(self.audio, "wav")
+        chunk_length_ms = 10000
+        chunks = make_chunks(myaudio, chunk_length_ms)
+        for i, chunk in enumerate(chunks):
+            OUTPUT_FILENAME = self.name + "-sample" + "_{0}.wav" + ".wav".format(i)
+            WAVE_OUTPUT_FILENAME = os.path.join("voice recognition\\training_set", OUTPUT_FILENAME)
+            trainedfilelist = open("voice recognition\\training_set_addition.txt", 'a')
+            trainedfilelist.write(OUTPUT_FILENAME + "\n")
+
+
+    def calculate_delta(self, array):
         rows, cols = array.shape
         print(rows)
         print(cols)
@@ -38,16 +54,16 @@ class VoiceRecognition():
         return deltas
 
 
-    def extract_features(audio, rate):
+    def extract_features(self, audio, rate):
         mfcc_feature = mfcc.mfcc(audio, rate, 0.025, 0.01, 20, nfft=1200, appendEnergy=True)
         mfcc_feature = preprocessing.scale(mfcc_feature)
         print(mfcc_feature)
-        delta = calculate_delta(mfcc_feature)
+        delta = self.calculate_delta(mfcc_feature)
         combined = np.hstack((mfcc_feature, delta))
         return combined
 
 
-    def train_model():
+    def train_model(self):
         source = "\\voice recognition\\training_set\\"
         dest = "\\voice recognition\\trained_models\\"
         train_file = "\\voice recognition\\training_set_addition.txt"
@@ -60,7 +76,7 @@ class VoiceRecognition():
 
             sr, audio = read(source + path)
             print(sr)
-            vector = extract_features(audio, sr)
+            vector = self.extract_features(audio, sr)
 
             if features.size == 0:
                 features = vector
@@ -80,7 +96,7 @@ class VoiceRecognition():
             count = count + 1
 
 
-    def test_model():
+    def test_model(self):
         source = ".\\voice recognition\\testing_set\\"
         modelpath = "\\voice recognition\\trained_models\\"
         test_file = "\\voice recognition\\testing_set_addition.txt"
@@ -100,7 +116,7 @@ class VoiceRecognition():
             path = path.strip()
             print(path)
             sr, audio = read(source + path)
-            vector = extract_features(audio, sr)
+            vector = self.extract_features(audio, sr)
 
             log_likelihood = np.zeros(len(models))
 
