@@ -27,9 +27,11 @@ class VoiceRecognition():
 
     def register_audio(self):
         Recordframes = []
+        start = 0
+        end = 7000
         for count in range(5):
-            
-            OUTPUT_FILENAME = self.audio + "-sample" + str(count) + ".wav"
+            Recordframes.append(self.audio[start:end])
+            OUTPUT_FILENAME =  self.name + "-sample" + str(count) + ".wav"
             WAVE_OUTPUT_FILENAME = os.path.join("voice recognition\\training_set", OUTPUT_FILENAME)
             trainedfilelist = open("voice recognition\\training_set_addition.txt", 'a')
             trainedfilelist.write(OUTPUT_FILENAME + "\n")
@@ -37,40 +39,11 @@ class VoiceRecognition():
             waveFile.setnchannels(1)
             waveFile.setsampwidth(audio.get_sample_size(pyaudio.paInt16))
             waveFile.setframerate(44100)
-            waveFile.writeframes(b''.join(self.audio))
+            waveFile.writeframes(b''.join(Recordframes))
             waveFile.close()
-
-        source = "voice recognition\\training_set\\"
-        dest = "voice recognition\\trained_models\\"
-        train_file = "voice recognition\\training_set_addition.txt"
-        file_paths = open(train_file, 'r')
-        count = 1
-        features = np.asarray(())
-        for path in file_paths:
-            path = path.strip()
-            print(path)
-
-            sr, audio = read(source + path)
-            print(sr)
-            vector = self.extract_features(audio, sr)
-
-            if features.size == 0:
-                features = vector
-            else:
-                features = np.vstack((features, vector))
-
-            if count == 5:
-                gmm = GaussianMixture(n_components=6, max_iter=200, covariance_type='diag', n_init=3)
-                gmm.fit(features)
-
-                # dumping the trained gaussian model
-                picklefile = path.split("-")[0] + ".gmm"
-                pickle.dump(gmm, open(dest + picklefile, 'wb'))
-                print('+ modeling completed for speaker:', picklefile, " with data point = ", features.shape)
-                features = np.asarray(())
-                count = 0
-            count = count + 1
-
+            start += 7000
+            end += 7000
+        self.train_model()
 
 
     def calculate_delta(self, array):

@@ -24,7 +24,7 @@ def trainmodel():
     name = request.form['name']
     voice_recognition = VoiceRecognition(audio, name)
     return jsonify({"message": "voice converted"})
-    # voice_recognition.train_model()
+    # result = voice_recognition.register_audio()
     # return jsonify({"message": "Model Trained"})
 
 @app.route('/voice', methods=['POST'])
