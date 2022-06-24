@@ -17,7 +17,7 @@ warnings.filterwarnings("ignore")
 
 class VoiceRecognition():
     def __init__(self, audio, name):
-        audio_file = AudioSegment.from_file(audio)
+        audio_file = AudioSegment.from_file(audio, format='m4a')
         self.audio = audio_file.export("audio", format='wav')
         self.name = name
 
