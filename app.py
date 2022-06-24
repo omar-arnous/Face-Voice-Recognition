@@ -21,7 +21,7 @@ def trainmodel():
     # response = request.get_json()
     audio = request.files['audio']
     # name = response['name']
-    AudioSegment.from_file(audio).export(audio, format="wav")
+    # AudioSegment.from_file(audio).export(audio, format="wav")
     return jsonify({"access"})
     # voice_recognition = VoiceRecognition(audio, name)
 
