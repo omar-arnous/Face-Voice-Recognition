@@ -18,31 +18,21 @@ warnings.filterwarnings("ignore")
 
 class VoiceRecognition():
     def __init__(self, audio, name):
-        audio_file = AudioSegment.from_file(audio, format='m4a')
-        self.audio = audio_file.export("audio", format='wav')
+        self.audio = audio
         self.name = name
 
     def register_audio(self):
-        audio = pyaudio.PyAudio()
-        Recordframes = []
-        start = 0
-        end = 7000
+        audio_file = AudioSegment.from_file(self.audio, format='aac')
         for count in range(5):
-            # sample = self.audio[start:end]
-            Recordframes.append(self.audio)
             OUTPUT_FILENAME =  self.name + "-sample" + str(count) + ".wav"
-            WAVE_OUTPUT_FILENAME = os.path.join("voice recognition\\training_set", OUTPUT_FILENAME)
+            audio_file.export(f"voice recognition\\training_set\\{OUTPUT_FILENAME}", format='wav')
             trainedfilelist = open("voice recognition\\training_set_addition.txt", 'a')
             trainedfilelist.write(OUTPUT_FILENAME + "\n")
-            waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-            waveFile.setnchannels(1)
-            waveFile.setsampwidth(audio.get_sample_size(pyaudio.paInt16))
-            waveFile.setframerate(44100)
-            waveFile.writeframes(b''.join(Recordframes))
-            waveFile.close()
-            start += 7000
-            end += 7000
-        self.train_model()
+        result = self.train_model()
+        if result:
+            return self.name
+        else:
+            return 0
 
 
     def calculate_delta(self, array):
@@ -85,6 +75,7 @@ class VoiceRecognition():
         file_paths = open(train_file, 'r')
         count = 1
         features = np.asarray(())
+        print(file_paths)
         for path in file_paths:
             path = path.strip()
             print(path)
@@ -113,6 +104,12 @@ class VoiceRecognition():
 
 
     def test_model(self):
+        OUTPUT_FILENAME = "sample.wav"
+        audio_file = AudioSegment.from_file(self.audio, format='aac')
+        audio_file.export(f"voice recognition\\testing_set\\{OUTPUT_FILENAME}", format='wav')
+        trainedfilelist = open("voice recognition\\testing_set_addition.txt", 'a')
+        trainedfilelist.write(OUTPUT_FILENAME + "\n")
+
         source = "voice recognition\\testing_set\\"
         modelpath = "voice recognition\\trained_models\\"
         test_file = "voice recognition\\testing_set_addition.txt"
@@ -143,4 +140,8 @@ class VoiceRecognition():
 
             winner = np.argmax(log_likelihood)
             print("\t detected as - ", speakers[winner])
-            return speakers[winner]
+            if speakers[winner]:
+                return 1
+            else:
+                return 0    
+            # return spakers[winner]
